@@ -55,6 +55,90 @@ struct node {
     }
 };
 
+int maxDepthDFS(int at, vector<node> &forest, vector<int> &res) {
+    int ret = forest[at].depth;
+    for (int i : forest[at].children) {
+        ret = max(res[i] = maxDepthDFS(i,forest,res), ret);
+    }
+    return ret;
+}
+
+vector<int> maxDepth(vector<int> &roots, vector<node> &forest) {
+    vector<int> res(forest.size());
+    for (int at : roots) {
+        res[at] = maxDepthDFS(at,forest,res);
+    }
+    return res;
+}
+
+//wiadomo, że dokonując operacji na jakimś wierzchołku,
+//przenosimy wszystkich jego synów na poziom jego rodzica (zmniejszamy ich głębokość o 2), usuwamy go oraz jego rodzica,
+//dodatkowo wszyscy synowie tego rodzica są rozdzieleni
+//pomiędzy dwa nowe wierzchołki, które pojawią się na poziomie
+//rodzica
+
+//wiadomo, że optymalna strategia polega na dokonywaniu operacji na wszystkich
+//synach korzeni, pod którymi znajdują się wierzchołki o większej głębokości od H
+
+//tak naprawdę, skoro robimy to jedynie na synach korzenia a na korzeniach nie można
+//tej operacji przeprowadzić, można zauważyć, że zdobycie listy wierzchołków na których
+//taką operację będziemy przeprowadzać jest trywialne
+
+//wiadomo, że wszyscy synowie synów korzenia staną się nowymi korzeniami, na których synach
+//zrobimy to samo
+//wszyscy pozostali synowie rodzica zostaną rozdzieleni pomiędzy dwa nowe korzenie, ale nie ma
+//to żadnego znaczenia, ponieważ i tak po prostu wykonamy na tych synach korzeni podobną operację
+
+//teraz aby stwierdzić na których synach korzeni będziemy to wykonywać, wystarczy na początku
+//użyć algorytmu DFS w celu znalezienia maksymalnej głębokości wierzchołków pod każdym z wierzchołków
+//w czasie liniowym
+
+//sprawa jest teraz całkiem prosta, wystarczy bowiem stworzyć taką rekurencyjną funkcję:
+//1. wykonujemy ją dla każdego syna korzenia, który ma głębokość maksymalną większą niż H
+//2. na każdym kroku dodajemy 1 do globalnej zmiennej
+//3. po każdym kroku, przekazujemy H + 2 zamiast H
+//3. iterujemy przez wnuki obecnego wierzchołka, który jest korzeniem w naszym "symulowanym" grafie i jeżeli
+//ich głębokość maksymalna jest większa niż "obecne H", wykonujemy rekurencję
+//4. jedynym wyjątkiem jest sytuacja gdy różnica pomiędzy H a maksymalną głębokością wynosi 1
+//w takiej sytuacji zamiast iterować przez wnuki po prostu iterujemy przez synów, dla każdego sprawdzamy
+//czy spełnia warunek i jeśli tak to dodajemy 1 do zmiennej globalnej dla każdego z nich
+
+int moves = 0;
+
+void solutionDFS(int at, vector<int> &max_depths, vector<node> &forest, int H) {
+    moves++;
+
+    if (max_depths[at] - (H + 2) == 1) {
+        for (int i : forest[at].children) {
+            if (max_depths[i] > H + 2) {
+                for (int j : forest[i].children) {
+                    if (max_depths[j] > H + 2) {
+                        moves++;
+                    }
+                }
+            }
+        }
+    } else {
+        for (int i : forest[at].children) {
+            for (int j : forest[i].children) {
+                if (max_depths[j] > H + 2) {
+                    solutionDFS(j,max_depths,forest,H + 2);
+                }
+            }
+        }
+    }
+}
+
+void solve(vector<int> &roots, vector<int> &max_depths, vector<node> &forest, int H) {
+    for (int i : roots) {
+        for (int j : forest[i].children) {
+            if (max_depths[j] > H) {
+                solutionDFS(j,max_depths,forest,H);
+            }
+        }
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
@@ -90,57 +174,29 @@ int main() {
 
         vector<node> forest;
         counter = 0;
+        vector<int> roots;
         for (int i = 0; i < parentheses.size(); i++) {
             char c = parentheses[i];
             if (c == '(') {
                 if (!s.empty()) {
                     int a = s.back();
                     forest[a].children.pb(counter);
+                } else {
+                    roots.pb(counter);
                 }
-
                 s.pb(counter);
                 forest.emplace_back(i,v[i],s.size(),s.front());
-                node n = forest[counter];
-                
-                //wiadomo, że dokonując operacji na jakimś wierzchołku,
-                //przenosimy wszystkich jego synów na poziom jego rodzica (zmniejszamy ich głębokość o 2), usuwamy go oraz jego rodzica,
-                //dodatkowo wszyscy synowie tego rodzica są rozdzieleni
-                //pomiędzy dwa nowe wierzchołki, które pojawią się na poziomie
-                //rodzica
-
-                //wiadomo, że optymalna strategia polega na dokonywaniu operacji na wszystkich
-                //synach korzeni, pod którymi znajdują się wierzchołki o większej głębokości od H
-
-                //tak naprawdę, skoro robimy to jedynie na synach korzenia a na korzeniach nie można
-                //tej operacji przeprowadzić, można zauważyć, że zdobycie listy wierzchołków na których
-                //taką operację będziemy przeprowadzać jest trywialne
-
-                //wiadomo, że wszyscy synowie synów korzenia staną się nowymi korzeniami, na których synach
-                //zrobimy to samo
-                //wszyscy pozostali synowie rodzica zostaną rozdzieleni pomiędzy dwa nowe korzenie, ale nie ma
-                //to żadnego znaczenia, ponieważ i tak po prostu wykonamy na tych synach korzeni podobną operację
-                
-                //teraz aby stwierdzić na których synach korzeni będziemy to wykonywać, wystarczy na początku
-                //użyć algorytmu DFS w celu znalezienia maksymalnej głębokości wierzchołków pod każdym z wierzchołków
-                //w czasie liniowym
-
-                //sprawa jest teraz całkiem prosta, wystarczy bowiem stworzyć taką rekurencyjną funkcję:
-                //1. wykonujemy ją dla każdego syna korzenia, który ma głębokość maksymalną większą niż H
-                //2. na każdym kroku dodajemy 1 do globalnej zmiennej
-                //3. po każdym kroku, przekazujemy H + 2 zamiast H
-                //3. iterujemy przez wnuki obecnego wierzchołka, który jest korzeniem w naszym "symulowanym" grafie i jeżeli
-                //ich głębokość maksymalna jest większa niż "obecne H", wykonujemy rekurencję
-                //4. jedynym wyjątkiem jest sytuacja gdy różnica pomiędzy H a maksymalną głębokością wynosi 1
-                //w takiej sytuacji zamiast iterować przez wnuki po prostu iterujemy przez synów, dla każdego sprawdzamy
-                //czy spełnia warunek i jeśli tak to dodajemy 1 do zmiennej globalnej dla każdego z nich
-
                 counter++;
             } else {
                 s.pop_back();
             }
         }
 
-        cout << 0 << endl;
+        vector<int> max_depths = maxDepth(roots, forest);
+
+        solve(roots,max_depths,forest,depth);
+
+        cout << moves * 2 << endl;
     } else {
         cout << 0 << endl;
     }
