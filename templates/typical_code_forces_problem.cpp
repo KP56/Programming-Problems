@@ -19,9 +19,9 @@ using pll = pair<ll, ll>;
 #define se second
 #define endl "\n"
 #define in(x) cin >> x
-#define in_ll(x) ll (x); in(x)
-#define in_i(x) int (x); in(x)
-#define in_str(x) string (x); in(x)
+#define in_ll(x) ll x; in(x)
+#define in_i(x) int x; in(x)
+#define in_str(x) string x; in(x)
 
 //https://codeforces.com/blog/entry/62393
 struct custom_hash {

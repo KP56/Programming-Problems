@@ -2,6 +2,7 @@
 using namespace std;
 
 //point modifications, range queries
+//https://www.geeksforgeeks.org/segment-tree-efficient-implementation/
 template<typename T> struct RangeTree {
     int n;
     vector<T> tree;
