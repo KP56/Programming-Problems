@@ -13,6 +13,7 @@ using pli = pair<ll, int>;
 using pll = pair<ll, ll>;
 
 #define pb push_back
+#define pf push_front
 #define mp make_pair
 #define all(x) (x).begin(),(x).end()
 #define fi first
