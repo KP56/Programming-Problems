@@ -2,15 +2,11 @@
 
 using namespace std;
 
-template<typename T>
-class OperationQueue {
+template<typename T> class OperationQueue {
 private:
     stack<pair<T, T>> s1;
     stack<pair<T, T>> s2;
-
-    T f(T a, T b) {
-        return max(a, b);
-    }
+    function<T(T,T)> f;
 
     void move() {
         if (s1.empty()) {
@@ -26,6 +22,10 @@ private:
         }
     }
 public:
+    OperationQueue(function<T(T,T)> f) {
+        this->f = f;
+    }
+
     void push(T a) {
         if (!s2.empty()) {
             s2.emplace(a, f(a, s2.top().first));
@@ -39,6 +39,14 @@ public:
         s1.pop();
     }
 
+    int size() {
+        return s1.size() + s2.size();
+    }
+
+    bool empty() {
+        return size() == 0;
+    }
+
     T query() {
         move();
 
@@ -50,24 +58,17 @@ public:
     }
 };
 
+int f(int a, int b) {
+    return max(a,b);
+}
+
 int main() {
-    OperationQueue<int> queue;
+    OperationQueue<int> queue(&f);
     queue.push(1);
-    queue.push(2);
-
-    cout << queue.query() << endl;
-
-    queue.pop();
-
-    cout << queue.query() << endl;
-
-    queue.push(1);
-    queue.pop();
-    
-    cout << queue.query() << endl;
-
-    queue.push(4);
     queue.push(3);
+    queue.push(2);
     
+    queue.pop();
+    queue.pop();
     cout << queue.query() << endl;
 }
