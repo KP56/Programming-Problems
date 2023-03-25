@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+template<typename T>
+using pair2 = pair<T, T>;
+
+#define int long long
+#define pii pair<int,int>
+#define pb push_back
+#define pf push_front
+#define mp make_pair
+#define all(x) (x).begin(),(x).end()
+#define fi first
+#define se second
+#define endl "\n"
+#define in(x) cin >> x
+#define ini(x) int x; in(x)
+#define instr(x) string x; in(x)
+
+#define inf 1e18
+
+const int N = 2e5+10;
+const int M = 5e3+10;
+
+//https://codeforces.com/blog/entry/62393
+struct custom_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    ini(n);
+    ini(m);
+
+    vector<int> a(N);
+    for (int i = 1; i <= n; i++) {
+        ini(x);
+		a[i] = x;
+    }
+    vector<int> c(N);
+	for (int i = 1; i <= n; i++) {
+        ini(x);
+		c[i] = x;
+    }
+    vector<int> buy(N);
+	for (int i = 1; i <= m; i++) {
+		ini(x);
+		buy[x] = 1;
+	}
+    vector<vector<int>> dp(M,vector<int>(M,inf));
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= n; j++)
+			dp[i][j] = inf;
+	dp[0][0] = 0;
+	for (int i = 1; i <= n; i++) {
+		int cost = inf;
+		if (!buy[i])
+			dp[i][0] = dp[i - 1][0];
+		for (int j = 1; j <= i; j++) {
+			cost = min(cost, c[i - j + 1]);
+			dp[i][j] = min(dp[i][j], dp[i - 1][j - 1] + cost + a[i]);
+			if (!buy[i])
+				dp[i][j] = min(dp[i][j], dp[i - 1][j]);
+		}
+	}
+    int res = inf;
+	for (int i = m; i <= n; i++)
+		res = min(res, dp[n][i]);
+
+    cout << res << endl;
+}
