@@ -2,16 +2,11 @@
 
 using namespace std;
 
-using ll = long long;
-using ld = long double;
-using uint = unsigned int;
-using ull = unsigned long long;
 template<typename T>
 using pair2 = pair<T, T>;
-using pii = pair<int, int>;
-using pli = pair<ll, int>;
-using pll = pair<ll, ll>;
 
+#define int long long
+#define pii pair<int,int>
 #define pb push_back
 #define pf push_front
 #define mp make_pair
@@ -20,9 +15,10 @@ using pll = pair<ll, ll>;
 #define se second
 #define endl "\n"
 #define in(x) cin >> x
-#define in_ll(x) ll x; in(x)
-#define in_i(x) int x; in(x)
-#define in_str(x) string x; in(x)
+#define ini(x) int x; in(x)
+#define instr(x) string x; in(x)
+
+#define inf 1e18
 
 //https://codeforces.com/blog/entry/62393
 struct custom_hash {
@@ -41,22 +37,22 @@ struct custom_hash {
 };
 
 void readCaseData() {
-    in_i(size);
+    ini(size);
 
     vector<int> arr;
     for (int i = 0; i < size; i++) {
-        in_i(el);
+        ini(el);
         arr.pb(el);
     }
 
     cout << 0 << endl;
 }
 
-int main() {
+signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    in_i(cases);
+    ini(cases);
 
     while (cases--) {
         readCaseData();
