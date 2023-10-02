@@ -7,9 +7,6 @@
             "args": [
                 "--std",
                 "c++17",
-                "-Wall",
-                "-Wl,-z,stack-size=1000000000",
-                "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",

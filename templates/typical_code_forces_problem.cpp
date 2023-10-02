@@ -37,10 +37,10 @@ struct custom_hash {
 };
 
 void readCaseData() {
-    ini(size);
+    ini(n);
 
     vector<int> arr;
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < n; i++) {
         ini(el);
         arr.pb(el);
     }
