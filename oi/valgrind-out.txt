@@ -1,0 +1,297 @@
+==20838== Memcheck, a memory error detector
+==20838== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==20838== Using Valgrind-3.18.1-42b08ed5bd-20211015 and LibVEX; rerun with -h for copyright info
+==20838== Command: ./uklad_scalony
+==20838== Parent PID: 19825
+==20838== 
+--20838-- 
+--20838-- Valgrind options:
+--20838--    --leak-check=full
+--20838--    --show-leak-kinds=all
+--20838--    --track-origins=yes
+--20838--    --verbose
+--20838--    --log-file=valgrind-out.txt
+--20838-- Contents of /proc/version:
+--20838--   Linux version 6.2.0-33-generic (buildd@lcy02-amd64-073) (x86_64-linux-gnu-gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #33~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Sep  7 10:33:52 UTC 2
+--20838-- 
+--20838-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand
+--20838-- Page sizes: currently 4096, max supported 4096
+--20838-- Valgrind library directory: /usr/libexec/valgrind
+--20838-- Reading syms from /media/k56/7D98023A6EF0E4E9/c++/oi/uklad_scalony
+--20838-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+--20838--   Considering /usr/lib/debug/.build-id/31/46e5a5e66e1fd6ab59a39e486a9d246bc675c0.debug ..
+--20838--   .. build-id is valid
+--20838-- Reading syms from /usr/libexec/valgrind/memcheck-amd64-linux
+--20838--    object doesn't have a symbol table
+--20838--    object doesn't have a dynamic symbol table
+--20838-- Scheduler: using generic scheduler lock implementation.
+--20838-- Reading suppressions file: /usr/libexec/valgrind/default.supp
+==20838== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-20838-by-k56-on-???
+==20838== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-20838-by-k56-on-???
+==20838== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-20838-by-k56-on-???
+==20838== 
+==20838== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==20838== don't want to do, unless you know exactly what you're doing,
+==20838== or are doing some strange experiment):
+==20838==   /usr/bin/vgdb --pid=20838 ...command...
+==20838== 
+==20838== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==20838==   /path/to/gdb ./uklad_scalony
+==20838== and then give GDB the following command
+==20838==   target remote | /usr/bin/vgdb --pid=20838
+==20838== --pid is optional if only one valgrind process is running
+==20838== 
+--20838-- REDIR: 0x402aaa0 (ld-linux-x86-64.so.2:strlen) redirected to 0x580bcec2 (???)
+--20838-- REDIR: 0x402a870 (ld-linux-x86-64.so.2:index) redirected to 0x580bcedc (???)
+--20838-- Reading syms from /usr/libexec/valgrind/vgpreload_core-amd64-linux.so
+--20838--    object doesn't have a symbol table
+--20838-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+--20838--    object doesn't have a symbol table
+==20838== WARNING: new redirection conflicts with existing -- ignoring it
+--20838--     old: 0x0402aaa0 (strlen              ) R-> (0000.0) 0x580bcec2 ???
+--20838--     new: 0x0402aaa0 (strlen              ) R-> (2007.0) 0x0484ee30 strlen
+--20838-- REDIR: 0x4027280 (ld-linux-x86-64.so.2:strcmp) redirected to 0x484fcd0 (strcmp)
+--20838-- REDIR: 0x402b000 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4853840 (mempcpy)
+--20838-- Reading syms from /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+--20838--    object doesn't have a symbol table
+--20838-- Reading syms from /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+--20838--    object doesn't have a symbol table
+--20838-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
+--20838--   Considering /usr/lib/debug/.build-id/22/9b7dc509053fe4df5e29e8629911f0c3bc66dd.debug ..
+--20838--   .. build-id is valid
+==20838== WARNING: new redirection conflicts with existing -- ignoring it
+--20838--     old: 0x04b63ce0 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--20838--     new: 0x04b63ce0 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
+==20838== WARNING: new redirection conflicts with existing -- ignoring it
+--20838--     old: 0x04b63ce0 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--20838--     new: 0x04b63ce0 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
+==20838== WARNING: new redirection conflicts with existing -- ignoring it
+--20838--     old: 0x04b63ce0 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--20838--     new: 0x04b63ce0 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
+==20838== WARNING: new redirection conflicts with existing -- ignoring it
+--20838--     old: 0x04b63ce0 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--20838--     new: 0x04b63ce0 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
+--20838-- Reading syms from /usr/lib/x86_64-linux-gnu/libm.so.6
+--20838--   Considering /usr/lib/debug/.build-id/22/1c30924bca215d523f04ea0aeba15703011edc.debug ..
+--20838--   .. build-id is valid
+--20838-- REDIR: 0x4b667a0 (libc.so.6:strnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66a60 (libc.so.6:strpbrk) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66360 (libc.so.6:strcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b84d50 (libc.so.6:wcsnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67750 (libc.so.6:memset) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b835c0 (libc.so.6:wcslen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67c90 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b833f0 (libc.so.6:wcschr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b662e0 (libc.so.6:index) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b669e0 (libc.so.6:rindex) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67620 (libc.so.6:memmove) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+==20838== Preferring higher priority redirection:
+--20838--     old: 0x04c5e980 (__memcpy_avx_unalign) R-> (2018.0) 0x04850f90 __memcpy_avx_unaligned_erms
+--20838--     new: 0x04c5e980 (__memcpy_avx_unalign) R-> (2018.1) 0x04852880 memmove
+--20838-- REDIR: 0x4b83470 (libc.so.6:wcscmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67a60 (libc.so.6:stpncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b83a30 (libc.so.6:wmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b668b0 (libc.so.6:strncmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67af0 (libc.so.6:strcasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b664a0 (libc.so.6:strcspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b834f0 (libc.so.6:wcscpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66250 (libc.so.6:strcat) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67be0 (libc.so.6:strncasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67500 (libc.so.6:bcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b6f5f0 (libc.so.6:memrchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b69090 (libc.so.6:strchrnul) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66410 (libc.so.6:strcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67b90 (libc.so.6:strcasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66720 (libc.so.6:strlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66950 (libc.so.6:strncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b679d0 (libc.so.6:stpcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67470 (libc.so.6:memchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b66b80 (libc.so.6:strspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67850 (libc.so.6:mempcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b67b40 (libc.so.6:strncasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4b69000 (libc.so.6:rawmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--20838-- REDIR: 0x4c5b7d0 (libc.so.6:__strrchr_avx2) redirected to 0x484e810 (rindex)
+--20838-- REDIR: 0x4b63120 (libc.so.6:malloc) redirected to 0x4848820 (malloc)
+--20838-- REDIR: 0x4c5b9a0 (libc.so.6:__strlen_avx2) redirected to 0x484ed10 (strlen)
+--20838-- REDIR: 0x4c57c40 (libc.so.6:__memcmp_avx2_movbe) redirected to 0x4852010 (bcmp)
+--20838-- REDIR: 0x49209d0 (libstdc++.so.6:operator new[](unsigned long)) redirected to 0x484a280 (operator new[](unsigned long))
+--20838-- REDIR: 0x4920970 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x4848fa0 (operator new(unsigned long))
+--20838-- REDIR: 0x4c5f140 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x4852770 (memset)
+--20838-- REDIR: 0x491ec20 (libstdc++.so.6:operator delete(void*, unsigned long)) redirected to 0x484bb00 (operator delete(void*, unsigned long))
+--20838-- REDIR: 0x4c5e980 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4852880 (memmove)
+--20838-- memcheck GC: 1000 nodes, 12 survivors (1.2%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 26 survivors (2.6%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 10 survivors (1.0%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 18 survivors (1.8%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 12 survivors (1.2%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 8 survivors (0.8%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 12 survivors (1.2%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 14 survivors (1.4%)
+--20838-- memcheck GC: 1000 nodes, 9 survivors (0.9%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 9 survivors (0.9%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 28 survivors (2.8%)
+--20838-- memcheck GC: 1000 nodes, 1 survivors (0.1%)
+--20838-- memcheck GC: 1000 nodes, 10 survivors (1.0%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 18 survivors (1.8%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 11 survivors (1.1%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 8 survivors (0.8%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 2 survivors (0.2%)
+--20838-- memcheck GC: 1000 nodes, 4 survivors (0.4%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 8 survivors (0.8%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 8 survivors (0.8%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 0 survivors (0.0%)
+--20838-- memcheck GC: 1000 nodes, 7 survivors (0.7%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 6 survivors (0.6%)
+--20838-- memcheck GC: 1000 nodes, 10 survivors (1.0%)
+--20838-- memcheck GC: 1000 nodes, 11 survivors (1.1%)
+--20838-- memcheck GC: 1000 nodes, 3 survivors (0.3%)
+--20838-- memcheck GC: 1000 nodes, 5 survivors (0.5%)
+--20838-- memcheck GC: 1000 nodes, 9 survivors (0.9%)
+--20838-- REDIR: 0x4b63460 (libc.so.6:free) redirected to 0x484b210 (free)
+==20838== 
+==20838== HEAP SUMMARY:
+==20838==     in use at exit: 122,880 bytes in 6 blocks
+==20838==   total heap usage: 158,039 allocs, 158,033 frees, 3,135,296 bytes allocated
+==20838== 
+==20838== Searching for pointers to 6 not-freed blocks
+==20838== Checked 148,496 bytes
+==20838== 
+==20838== 8,192 bytes in 1 blocks are still reachable in loss record 1 of 6
+==20838==    at 0x484A2F3: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20838==    by 0x4987023: std::basic_filebuf<char, std::char_traits<char> >::_M_allocate_internal_buffer() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4984EB1: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x49319FC: std::ios_base::sync_with_stdio(bool) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x10A5B8: main (uklad_scalony.cpp:203)
+==20838== 
+==20838== 8,192 bytes in 1 blocks are still reachable in loss record 2 of 6
+==20838==    at 0x484A2F3: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20838==    by 0x4987023: std::basic_filebuf<char, std::char_traits<char> >::_M_allocate_internal_buffer() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4984EB1: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4931A1F: std::ios_base::sync_with_stdio(bool) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x10A5B8: main (uklad_scalony.cpp:203)
+==20838== 
+==20838== 8,192 bytes in 1 blocks are still reachable in loss record 3 of 6
+==20838==    at 0x484A2F3: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20838==    by 0x4987023: std::basic_filebuf<char, std::char_traits<char> >::_M_allocate_internal_buffer() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4984EB1: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4931A42: std::ios_base::sync_with_stdio(bool) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x10A5B8: main (uklad_scalony.cpp:203)
+==20838== 
+==20838== 32,768 bytes in 1 blocks are still reachable in loss record 4 of 6
+==20838==    at 0x484A2F3: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20838==    by 0x4988D56: std::basic_filebuf<wchar_t, std::char_traits<wchar_t> >::_M_allocate_internal_buffer() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4985091: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4931AAB: std::ios_base::sync_with_stdio(bool) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x10A5B8: main (uklad_scalony.cpp:203)
+==20838== 
+==20838== 32,768 bytes in 1 blocks are still reachable in loss record 5 of 6
+==20838==    at 0x484A2F3: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20838==    by 0x4988D56: std::basic_filebuf<wchar_t, std::char_traits<wchar_t> >::_M_allocate_internal_buffer() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4985091: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4931ACE: std::ios_base::sync_with_stdio(bool) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x10A5B8: main (uklad_scalony.cpp:203)
+==20838== 
+==20838== 32,768 bytes in 1 blocks are still reachable in loss record 6 of 6
+==20838==    at 0x484A2F3: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20838==    by 0x4988D56: std::basic_filebuf<wchar_t, std::char_traits<wchar_t> >::_M_allocate_internal_buffer() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4985091: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x4931AF1: std::ios_base::sync_with_stdio(bool) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==20838==    by 0x10A5B8: main (uklad_scalony.cpp:203)
+==20838== 
+==20838== LEAK SUMMARY:
+==20838==    definitely lost: 0 bytes in 0 blocks
+==20838==    indirectly lost: 0 bytes in 0 blocks
+==20838==      possibly lost: 0 bytes in 0 blocks
+==20838==    still reachable: 122,880 bytes in 6 blocks
+==20838==         suppressed: 0 bytes in 0 blocks
+==20838== 
+==20838== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
