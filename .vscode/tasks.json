@@ -3,10 +3,10 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++ kompiluj aktywny plik",
-            "command": "/usr/bin/g++",
+            "command": "g++",
             "args": [
                 "--std",
-                "c++17",
+                "c++20",
                 "-g",
                 "${file}",
                 "-o",
