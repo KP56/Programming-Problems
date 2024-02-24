@@ -1,0 +1,94 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+template<typename T>
+using pair2 = pair<T, T>;
+
+#define int long long
+#define pii pair<int,int>
+#define pb push_back
+#define pf push_front
+#define mp make_pair
+#define all(x) (x).begin(),(x).end()
+#define fi first
+#define se second
+#define endl "\n"
+#define in(x) cin >> x
+#define ini(x) int x; in(x)
+#define instr(x) string x; in(x)
+
+#define inf 1e18
+
+//https://codeforces.com/blog/entry/62393
+struct custom_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
+
+void readCaseData() {
+    ini(n);
+
+    vector<int> arr;
+    for (int i = 0; i < n; i++) {
+        ini(el);
+        arr.pb(el);
+    }
+
+    if (n == 1) {
+        cout << arr[0]-1 << endl;
+        return;
+    }
+
+    vector<int> segments;
+    int zero_segments = 0;
+    int prev = INT_MIN;
+    for (int i : arr) {
+        if (i != prev) {
+            segments.pb(i);
+        }
+
+        if (prev != 0 && i == 0) {
+            zero_segments++;
+        }
+
+        prev = i;
+    }
+
+    if (arr[arr.size() - 1] == 0) {
+        zero_segments--;
+    }
+
+    int inside = 1;
+    int res = zero_segments;
+    for (int i = 0; i < segments.size(); i++) {
+        if (segments[i] > inside) {
+            res += segments[i]-inside;
+        }
+
+        inside = max(1ll,segments[i]);
+    }
+
+    cout << res << endl;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    ini(cases);
+
+    while (cases--) {
+        readCaseData();
+    }
+}
