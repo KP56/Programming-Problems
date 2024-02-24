@@ -2,202 +2,344 @@
 
 using namespace std;
 
-using ll = long long;
-using ld = long double;
-using uint = unsigned int;
-using ull = unsigned long long;
-template<typename T>
-using pair2 = pair<T, T>;
-using pii = pair<int, int>;
-using pli = pair<ll, int>;
-using pll = pair<ll, ll>;
+#define int long long int
 
-#define pb push_back
-#define pf push_front
-#define mp make_pair
-#define all(x) (x).begin(),(x).end()
-#define fi first
-#define se second
-#define endl "\n"
-#define in(x) cin >> x
-#define inll(x) ll x; in(x)
-#define ini(x) int x; in(x)
-#define instr(x) string x; in(x)
+struct block {
+    vector<int> elements;
+    int block_sum = 0;
+    int sum_of_initial = 0;
+    int sum_of_velocities = 0;
 
-//https://codeforces.com/blog/entry/62393
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
+    int first_element_position;
+    int last_element_position;
+
+    block() {}
+
+    block(int first_element_position, int last_element_position) {
+        this->first_element_position = first_element_position;
+        this->last_element_position = last_element_position;
+
+        elements = vector<int>(last_element_position - first_element_position + 1);
     }
 
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
+    bool covers_total_block(int position, int initial_strength, int loses) {
+        int val1 = max(0ll,initial_strength-abs(position-first_element_position)*loses);
+        int val2 = max(0ll,initial_strength-abs(position-last_element_position)*loses);
+
+        return val1 != 0 && val2 != 0;
+    }
+
+    void add_to_total_block(int position, int initial_strength, int loses) {
+        int val1 = initial_strength-abs(position-first_element_position)*loses;
+        int val2 = initial_strength-abs(position-last_element_position)*loses;
+
+        // jeżeli mamy val1 oraz val2 to wystarczy suma elementów ciągu arytmetycznego
+        // initial_strength*n+loses*n*(n+1)/2
+
+        int n = last_element_position-first_element_position+1;
+
+        if (val1 < val2) {
+            block_sum += (initial_strength-loses*abs(position-first_element_position))*n+loses*(n-1)*n/2;
+        } else {
+            block_sum += (initial_strength-loses*abs(position-last_element_position))*n+loses*(n-1)*n/2;
+        }
+        if (position < first_element_position) {
+            // jeżeli jest przed blockiem to mamy opadający sygnał
+            sum_of_initial += val1;
+            sum_of_velocities -= loses;
+        } else {
+            // w przeciwnym wypadku sygnał jest rosnący
+            sum_of_initial += val1;
+            sum_of_velocities += loses;
+        }
+    }
+
+    void remove_from_total_block(int position, int initial_strength, int loses) {
+        int val1 = initial_strength-abs(position-first_element_position)*loses;
+        int val2 = initial_strength-abs(position-last_element_position)*loses;
+
+        // jeżeli mamy val1 oraz val2 to wystarczy suma elementów ciągu arytmetycznego
+        // initial_strength*n+loses*n*(n+1)/2
+
+        int n = last_element_position-first_element_position+1;
+
+        if (val1 < val2) {
+            block_sum -= (initial_strength-loses*abs(position-first_element_position))*n+loses*(n-1)*n/2;
+        } else {
+            block_sum -= (initial_strength-loses*abs(position-last_element_position))*n+loses*(n-1)*n/2;
+        }
+        if (position < first_element_position) {
+            // jeżeli jest przed blockiem to mamy opadający sygnał
+            sum_of_initial -= val1;
+            sum_of_velocities += loses;
+        } else {
+            // w przeciwnym wypadku sygnał jest rosnący
+            sum_of_initial -= val1;
+            sum_of_velocities -= loses;
+        }
+    }
+
+    // element jest indeksem BLOKOWYM
+    void remove_from_specific_element(int element, int position, int initial_strength, int loses) {
+        int add = max(0ll,initial_strength-abs(position-(first_element_position+element))*loses);
+
+        elements[element] -= add;
+        block_sum -= add;
+    }
+
+    // element jest indeksem BLOKOWYM
+    void modify_specific_element(int element, int position, int initial_strength, int loses) {
+        int add = max(0ll,initial_strength-abs(position-(first_element_position+element))*loses);
+
+        elements[element] += add;
+        block_sum += add;
+    }
+
+    // element jest indeksem BLOKOWYM
+    int retrieve_specific_element(int element) {
+        return elements[element] + sum_of_initial + element * sum_of_velocities;
     }
 };
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
+struct sqrt_decomp {
+    vector<block> blocks;
+    int normal_block_size;
+    int n;
 
-    ini(n);
-    ini(m);
+    sqrt_decomp(int size) {
+        n = size;
+        normal_block_size = sqrt(size);
 
-    vector<pair<string,vector<int>>> operations;
-    bool has_there_been_z = false;
-    bool is_z_last = true;
-    int towers = 0;
-    bool less_than_fifty = true;
-    bool always_equal_x = true;
-    for (int i = 0; i < m; i++) {
-        instr(type);
-        if (type == "P") {
-            ini(x);
-            ini(s);
-            ini(a);
-            x--;
-            operations.pb({type,{x,s,a}});
-            if (has_there_been_z) is_z_last = false;
-            towers++;
-            if (towers > 50) less_than_fifty = false;
-        } else if (type == "U") {
-            ini(x);
-            x--;
-            operations.pb({type,{x}});
-            if (has_there_been_z) is_z_last = false;
-            towers--;
-        } else {
-            ini(x1);
-            ini(x2);
-            x1--;
-            x2--;
-            has_there_been_z = true;
-            operations.pb({type,{x1,x2}});
-            if (x1 != x2) always_equal_x = false;
+        for (int i = 0; i < n/normal_block_size+1; i++) {
+            blocks.push_back(block(i*normal_block_size,(i+1)*normal_block_size-1));
         }
     }
 
-    if (n <= 0 && m <= 0) {
-        //podzadanie 1
-        vector<int> state(n);
-        vector<vector<int>> towers(n);
-        for (auto i : operations) {
-            if (i.first == "P") {
-                int power = i.second[1];
-                for (int j = i.second[0]; j < n && power > 0; j++) {
-                    state[j] += power;
-                    power -= i.second[2];
-                }
+    int query(int l, int r) {
+        int elements = r-l+1;
 
-                power = i.second[1] - i.second[2];
-                for (int j = i.second[0] - 1; j >= 0 && power > 0; j--) {
-                    state[j] += power;
-                    power -= i.second[2];
-                }
+        int left_block = l / normal_block_size;
+        int left_block_idx = l % normal_block_size;
 
-                towers[i.second[0]] = i.second;
-            } else if (i.first == "U") {
-                vector<int> &tower = towers[i.second[0]];
-                int power = tower[1];
-                for (int j = tower[0]; j < n && power > 0; j++) {
-                    state[j] -= power;
-                    power -= tower[2];
-                }
+        int right_block = r / normal_block_size;
+        int right_block_idx = r % normal_block_size;
 
-                power = tower[1] - tower[2];
-                for (int j = tower[0] - 1; j >= 0 && power > 0; j--) {
-                    state[j] -= power;
-                    power -= tower[2];
-                }
-
-                towers[tower[0]] = {};
-            } else {
-                int res = 0;
-                for (int j = i.second[0]; j <= i.second[1]; j++) {
-                    res += state[j];
-                }
-                cout << res / (i.second[1] - i.second[0] + 1) << endl;
-            }
-        }
-    } else if (is_z_last) {
-        //podzadanie 2
-        vector<vector<int>> towers(n);
-        for (auto i : operations) {
-            if (i.first == "P") {
-                towers[i.second[0]] = i.second;
-            } else if (i.first == "U") {
-                towers[i.second[0]] = {};
+        int res = 0;
+        for (block &b : blocks) {
+            if (b.first_element_position > l && b.last_element_position < r) {
+                res += b.block_sum;
             }
         }
 
-        vector<int> state(n);
-        int power_sum = 0;
-        int power_dec = 0;
-        priority_queue<pii,vector<pii>,greater<pii>> q;
-        for (int i = 0; i < n; i++) {
-            if (!q.empty()) {
-                while (!q.empty() && q.top().first == i) {
-                    power_dec -= q.top().second;
-                    q.pop();
+        if (left_block == right_block) {
+            for (int i = left_block_idx; i <= right_block_idx; i++) {
+                res += blocks[left_block].retrieve_specific_element(i);
+            }
+        } else {
+            block &left_block_b = blocks[left_block];
+            for (int i = left_block_idx; i < normal_block_size; i++) {
+                res += left_block_b.retrieve_specific_element(i);
+            }
+
+            block &right_block_b = blocks[right_block];
+            for (int i = 0; i <= right_block_idx; i++) {
+                res += right_block_b.retrieve_specific_element(i);
+            }
+        }
+
+        return res / elements;
+    }
+
+    void add(int position, int initial_strength, int loses) {
+        // znajdujemy blok w którym postawiliśmy maszt
+        int block_id = position / normal_block_size;
+
+        for (int i = 0; i < blocks.size(); i++) {
+            if (i == block_id) continue;
+
+            block &b = blocks[i];
+            
+            if (b.covers_total_block(position, initial_strength, loses)) {
+                b.add_to_total_block(position, initial_strength, loses);
+            }
+        }
+
+        // dodajemy do wszystkich elementów
+        for (int i = 0; i < normal_block_size; i++) {
+            blocks[block_id].modify_specific_element(i,position,initial_strength,loses);
+        }
+
+        // teraz odnajdujemy bloki skrajne i w nich aktualizujemy jedynie do konkretnych elementów
+        // s-a*d>0
+        // a*d<s
+        // d<s/a
+
+        int d = initial_strength / loses - 1 + (initial_strength % loses != 0);
+        int right_position = min(n-1,position + d);
+        int left_position = max(0ll,position - d);
+
+        int right_block = right_position / normal_block_size;
+        int left_block = left_position / normal_block_size;
+
+        int right_block_el = right_position % normal_block_size;
+        int left_block_el = left_position % normal_block_size;
+
+        if (left_block != right_block) {
+            block &left_block_b = blocks[left_block];
+            block &right_block_b = blocks[right_block];
+            if (left_block_el != 0 && left_block != block_id && !left_block_b.covers_total_block(position, initial_strength, loses)) {
+                for (int i = left_block_el; i < normal_block_size; i++) {
+                    left_block_b.modify_specific_element(i,position,initial_strength,loses);
                 }
             }
 
-            if (towers[i] != vector<int>()) {
-                vector<int> &tower = towers[i];
-                power_sum += tower[1];
-                power_dec += tower[2];
-                q.push({i + tower[1] / tower[2],tower[2] - tower[1] % tower[2]});
-                q.push({i + tower[1] / tower[2] + 1,tower[1] % tower[2]});
+            if (right_block_el != normal_block_size - 1 && right_block != block_id && !right_block_b.covers_total_block(position, initial_strength, loses)) {
+                for (int i = 0; i <= right_block_el; i++) {
+                    right_block_b.modify_specific_element(i,position,initial_strength,loses);
+                }
             }
+        }
+    }
 
-            state[i] += power_sum;
-            power_sum -= power_dec;
+    void remove(int position, int initial_strength, int loses) {
+        // znajdujemy blok w którym postawiliśmy maszt
+        int block_id = position / normal_block_size;
+
+        for (int i = 0; i < blocks.size(); i++) {
+            if (i == block_id) continue;
+
+            block &b = blocks[i];
+            
+            if (b.covers_total_block(position, initial_strength, loses)) {
+                b.remove_from_total_block(position, initial_strength, loses);
+            }
         }
 
-        power_sum = 0;
-        power_dec = 0;
-        priority_queue<pii,vector<pii>> q2;
-        for (int i = n - 1; i >= 0; i--) {
-            if (!q2.empty()) {
-                while (!q2.empty() && q2.top().first == i) {
-                    power_dec -= q2.top().second;
-                    q2.pop();
+        // dodajemy do wszystkich elementów
+        for (int i = 0; i < normal_block_size; i++) {
+            blocks[block_id].remove_from_specific_element(i,position,initial_strength,loses);
+        }
+
+        // teraz odnajdujemy bloki skrajne i w nich aktualizujemy jedynie do konkretnych elementów
+        // s-a*d>0
+        // a*d<s
+        // d<s/a
+
+        int d = initial_strength / loses - 1 + (initial_strength % loses != 0);
+        int right_position = min(n-1,position + d);
+        int left_position = max(0ll,position - d);
+
+        int right_block = right_position / normal_block_size;
+        int left_block = left_position / normal_block_size;
+
+        int right_block_el = right_position % normal_block_size;
+        int left_block_el = left_position % normal_block_size;
+
+        if (left_block != right_block) {
+            block &left_block_b = blocks[left_block];
+            block &right_block_b = blocks[right_block];
+            if (left_block_el != 0 && left_block != block_id && !left_block_b.covers_total_block(position, initial_strength, loses)) {
+                for (int i = left_block_el; i < normal_block_size; i++) {
+                    left_block_b.remove_from_specific_element(i,position,initial_strength,loses);
                 }
             }
 
-            if (towers[i] != vector<int>()) {
-                vector<int> &tower = towers[i];
-                power_sum += tower[1];
-                power_dec += tower[2];
-                q2.push({i - tower[1] / tower[2],tower[2] - tower[1] % tower[2]});
-                q2.push({i - tower[1] / tower[2] - 1,tower[1] % tower[2]});
-            }
-
-            state[i] += power_sum;
-            power_sum -= power_dec;
-        }
-
-        for (auto i : towers) {
-            if (!i.empty()) {
-                state[i[0]] -= i[1];
+            if (right_block_el != normal_block_size - 1 && right_block != block_id && !right_block_b.covers_total_block(position, initial_strength, loses)) {
+                for (int i = 0; i <= right_block_el; i++) {
+                    right_block_b.remove_from_specific_element(i,position,initial_strength,loses);
+                }
             }
         }
+    }
+};
 
-        vector<int> state_prefix;
-        int prev = 0;
-        for (int i : state) {
-            state_prefix.pb(i + prev);
-            prev += i;
-        }
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
 
-        for (auto i : operations) {
-            if (i.first == "Z") {
-                cout << (state_prefix[i.second[1]] - (i.second[0] == 0 ? 0 : state_prefix[i.second[0] - 1])) / (i.second[1] - i.second[0] + 1) << endl;
+    srand(time(NULL));
+
+    //int n = rand() % 10 + 1,m = rand() % 10 + 1;
+    int n,m;
+    cin >> n >> m;
+
+    //vector<int> bruteforce_vec(n);
+
+    sqrt_decomp decomp(n);
+
+    vector<pair<int,int>> mem(n);
+
+    //vector<vector<int>> queries;
+
+    for (int i = 0; i < m; i++) {
+        string operation;
+
+        /*int rand_res = rand() % 3;
+        if (rand_res == 0) {
+            operation = "P";
+        } else if (rand_res == 1) {
+            operation = "U";
+        } else {
+            operation = "Z";
+        }*/
+
+        cin >> operation;
+
+        if (operation == "P") {
+            // postawienie masztu
+            //int x = rand() % n + 1,s = rand() % 5 + 1,a = rand() % 5 + 1;
+            int x,s,a;
+            cin >> x >> s >> a;
+
+            //queries.push_back({x,s,a});
+
+            x--;
+
+            /*for (int j = 0; j < n; j++) {
+                bruteforce_vec[j] += max(0ll,s-a*abs(j-x));
+            }*/
+
+            mem[x] = {s,a};
+            decomp.add(x,s,a);
+        } else if (operation == "U") {
+            // usunięcie masztu
+            //int x = rand() % n + 1;
+            int x;
+            cin >> x;
+
+            //queries.push_back({x});
+
+            x--;
+
+            /*for (int j = 0; j < n; j++) {
+                bruteforce_vec[j] -= max(0ll,mem[x].first-mem[x].second*abs(j-x));
+            }*/
+
+            decomp.remove(x,mem[x].first,mem[x].second);
+        } else if (operation == "Z") {
+            // zapytanie
+            //int x1 = rand() % n + 1,x2 = rand() % (n-x1+1) + x1;
+            int x1,x2;
+            cin >> x1 >> x2;
+
+            //queries.push_back({x1,x2});
+
+            x1--;
+            x2--;
+
+            /*int brute_res = 0;
+            for (int j = x1; j <= x2; j++) {
+                brute_res += bruteforce_vec[j];
             }
+            brute_res /= (x2-x1+1);*/
+
+            int res = decomp.query(x1,x2);
+
+            /*if (brute_res != res) {
+                int test = 0;
+            }*/
+
+            cout << res << "\n";
         }
     }
 }

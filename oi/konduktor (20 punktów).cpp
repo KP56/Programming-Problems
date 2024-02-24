@@ -2,74 +2,122 @@
 
 using namespace std;
 
-using ll = long long;
-using ld = long double;
-using uint = unsigned int;
-using ull = unsigned long long;
-template<typename T>
-using pair2 = pair<T, T>;
-using pii = pair<int, int>;
-using pli = pair<ll, int>;
-using pll = pair<ll, ll>;
+#define int long long int
 
-#define pb push_back
-#define pf push_front
-#define mp make_pair
-#define all(x) (x).begin(),(x).end()
-#define fi first
-#define se second
-#define endl "\n"
-#define in(x) cin >> x
-#define inll(x) ll x; in(x)
-#define ini(x) int x; in(x)
-#define instr(x) string x; in(x)
+int solve(vector<pair<int,int>> tracks) {
+    // procedura zachłanna polegająca na obserwacji, że zawsze opłaca się brać jak najdalsze (wynika z programowania dynamicznego)
 
-//https://codeforces.com/blog/entry/62393
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-void readCaseData() {
-    ini(stations);
-    ini(options);
-
-    vector<pii> vec;
-    for (int i = 0; i < options; i++) {
-        ini(a);
-        ini(b);
-        vec.pb({b,a});
-    }
-    sort(all(vec));
-    int max_end = vec[0].first;
-    int sol = 1;
-    for (int i = 0; i < options; i++) {
-        if (vec[i].second >= max_end) {
-            max_end = vec[i].first;
-            sol++;
+    int result = 0;
+    int last = -1;
+    for (int i = 0; i < tracks.size(); i++) {
+        if (tracks[i].first > last) {
+            result++;
+            last = tracks[i].second-1;
         }
     }
 
-    cout << sol << " " << 0 << endl;
+    return result;
 }
 
-int main() {
+int min_val = INT_MAX;
+int combinations = 0;
+void generate_bruteforce(int m, vector<pair<int,int>> &tracks, vector<bool> &current) {
+    if (current.size() == m) {
+        bool found_for_all = true;
+        for (int i = 0; i < tracks.size(); i++) {
+            bool found = false;
+            for (int j = tracks[i].first; j < tracks[i].second; j++) {
+                if (current[j]) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                found_for_all = false;
+                break;
+            }
+        }
+
+        if (found_for_all) {
+            int val = 0;
+            for (bool b : current) {
+                val += b;
+            }
+
+            if (val < min_val) {
+                combinations = 1;
+            } else if (val == min_val) {
+                combinations++;
+            }
+
+            min_val = min(val,min_val);
+        }
+
+        return;
+    }
+
+    vector<bool> cp = current;
+    cp.push_back(false);
+
+    generate_bruteforce(m,tracks,cp);
+
+    vector<bool> cp2 = current;
+    cp2.push_back(true);
+
+    generate_bruteforce(m,tracks,cp2);
+}
+
+int minimum_bruteforce(int m, vector<pair<int,int>> tracks) {
+    vector<bool> current;
+    generate_bruteforce(m,tracks,current);
+
+    return min_val;
+}
+
+signed main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(NULL);
 
-    ini(cases);
+    srand(time(NULL));
 
-    while (cases--) {
-        readCaseData();
+    int z;
+    cin >> z;
+
+    for (int i = 0; i < z; i++) {
+        min_val = INT_MAX;
+        combinations = 0;
+
+        //int m = rand() % 5 + 2,n = rand() % 5 + 1;
+        int m,n;
+        cin >> m >> n;
+
+        vector<pair<int,int>> tracks; 
+        for (int j = 0; j < n; j++) {
+            //int a = rand() % (m-1) + 1,b = rand() % (m-a) + a + 1;
+            int a,b;
+            cin >> a >> b;
+
+            a--;
+            b--;
+
+            tracks.push_back({b,a});
+        }
+
+        sort(tracks.begin(),tracks.end());
+
+        vector<pair<int,int>> actual_tracks;
+        for (auto i : tracks) {
+            actual_tracks.push_back({i.second,i.first});
+        }
+
+        int res = solve(actual_tracks);
+        //int brute_res = minimum_bruteforce(m,actual_tracks);
+
+        /*if (res != brute_res) {
+            int test = 0;
+        }*/
+
+        cout << res << " " << combinations << "\n";
     }
 }
